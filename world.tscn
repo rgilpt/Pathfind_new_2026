@@ -6,9 +6,11 @@
 [ext_resource type="Script" uid="uid://bct4xcg8fods8" path="res://Scripts/friend.gd" id="3_dwbse"]
 [ext_resource type="Texture2D" uid="uid://b77v6iolxr0bg" path="res://Assets/Player.png" id="4_gbfbk"]
 [ext_resource type="Script" uid="uid://b0cvcx2gc42rv" path="res://Scripts/enemy.gd" id="5_dwbse"]
+[ext_resource type="Script" uid="uid://f2aub12uxhnh" path="res://Scripts/enemy_pathfinding.gd" id="5_wse8f"]
 [ext_resource type="Texture2D" uid="uid://by5pdn225pfss" path="res://Assets/Enemy.png" id="6_gbfbk"]
 [ext_resource type="Texture2D" uid="uid://c4xyuklespkgm" path="res://Assets/Friend.png" id="8_ioo17"]
 [ext_resource type="Script" uid="uid://bivuyuh251yt7" path="res://Scripts/house_friend.gd" id="9_ioo17"]
+[ext_resource type="Texture2D" uid="uid://bt8qbbhr7fknw" path="res://Assets/coin.png" id="11_ic0uy"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_wse8f"]
 texture = ExtResource("1_gbfbk")
@@ -776,6 +778,11 @@ vertices = PackedVector2Array(1347.8203, 378.1875, 1234.2969, 387.14844, 1237.72
 polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3, 4), PackedInt32Array(5, 6, 7, 8), PackedInt32Array(9, 8, 7, 10), PackedInt32Array(10, 7, 11, 4), PackedInt32Array(12, 0, 4, 11, 13), PackedInt32Array(14, 15, 16, 17), PackedInt32Array(17, 16, 18, 19), PackedInt32Array(20, 17, 19, 13), PackedInt32Array(21, 22, 23, 24, 25), PackedInt32Array(25, 24, 26), PackedInt32Array(12, 25, 26, 0), PackedInt32Array(20, 13, 11, 27)])
 outlines = Array[PackedVector2Array]([PackedVector2Array(1224, 398, 1228, 250, 1726, 249, 1727, 308, 1774, 314, 1773, 251, 1988, 251, 1987, 396, 1776, 402, 1776, 359, 1725, 360, 1723, 396, 1686, 403, 1685, 453, 1982, 448, 1985, 712, 1535, 708, 1533, 450, 1641, 448, 1640, 393, 1387, 398, 1385, 452, 1483, 455, 1490, 698, 1231, 704, 1229, 452, 1339, 448, 1338, 389)])
 
+[sub_resource type="NavigationPolygon" id="NavigationPolygon_hwx5q"]
+vertices = PackedVector2Array(978.3906, 7.5625, 913.1406, 10.5234375, 913.8594, -43.109375, 1063.1406, -44.882813, 1004.9531, 6, 1063.8594, 6, 998.21094, 73.453125, 982.2969, 72.71094, 1172.1406, 412.96875, 468.14063, 411.02344, 469.85156, 292.03906, 925.5078, 294.03906, 1173.8594, 291.21094, 1049.9531, 281.21875, 1050.9531, 87.64844, 934.75, 109.11719)
+polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3, 4), PackedInt32Array(3, 5, 4), PackedInt32Array(0, 4, 6, 7), PackedInt32Array(8, 9, 10, 11), PackedInt32Array(12, 8, 11, 13), PackedInt32Array(6, 14, 13, 11, 15, 7)])
+outlines = Array[PackedVector2Array]([PackedVector2Array(903, 21, 904, -53, 1073, -55, 1074, 16, 1014, 16, 1009, 66, 1061, 80, 1060, 272, 1184, 282, 1182, 423, 458, 421, 460, 282, 916, 284, 925, 104, 972, 68, 969, 18)])
+
 [node name="World" type="Node2D" unique_id=1440216277]
 
 [node name="TileMapLayer" type="TileMapLayer" parent="." unique_id=1998603025]
@@ -811,9 +818,8 @@ shape = SubResource("RectangleShape2D_hwx5q")
 
 [node name="Enemy" type="CharacterBody2D" parent="Dynamic" unique_id=208040758 node_paths=PackedStringArray("player")]
 position = Vector2(941, -49)
-script = ExtResource("5_dwbse")
+script = ExtResource("5_wse8f")
 player = NodePath("../Player")
-distance_to_track = 60.0
 
 [node name="Sprite2D" type="Sprite2D" parent="Dynamic/Enemy" unique_id=2146710698]
 texture_filter = 1
@@ -829,6 +835,81 @@ shape = SubResource("RectangleShape2D_hwx5q")
 shape = SubResource("CircleShape2D_hwx5q")
 
 [node name="RayCast2D" type="RayCast2D" parent="Dynamic/Enemy" unique_id=1133773031]
+
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="Dynamic/Enemy" unique_id=1349219882]
+debug_enabled = true
+debug_path_custom_color = Color(1, 0.14509805, 1, 1)
+
+[node name="Enemy3" type="CharacterBody2D" parent="Dynamic" unique_id=1706056869 node_paths=PackedStringArray("player")]
+position = Vector2(1902, 298)
+script = ExtResource("5_wse8f")
+player = NodePath("../Player")
+
+[node name="Sprite2D" type="Sprite2D" parent="Dynamic/Enemy3" unique_id=1207942492]
+texture_filter = 1
+texture = ExtResource("6_gbfbk")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Dynamic/Enemy3" unique_id=1554755186]
+position = Vector2(5, 41)
+shape = SubResource("RectangleShape2D_hwx5q")
+
+[node name="Perception" type="Area2D" parent="Dynamic/Enemy3" unique_id=1906975381]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Dynamic/Enemy3/Perception" unique_id=775662760]
+shape = SubResource("CircleShape2D_hwx5q")
+
+[node name="RayCast2D" type="RayCast2D" parent="Dynamic/Enemy3" unique_id=757603497]
+
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="Dynamic/Enemy3" unique_id=1942553917]
+debug_enabled = true
+debug_path_custom_color = Color(1, 0.14509805, 1, 1)
+
+[node name="Enemy4" type="CharacterBody2D" parent="Dynamic" unique_id=826558574 node_paths=PackedStringArray("player")]
+position = Vector2(1837, 601)
+script = ExtResource("5_wse8f")
+player = NodePath("../Player")
+
+[node name="Sprite2D" type="Sprite2D" parent="Dynamic/Enemy4" unique_id=631176817]
+texture_filter = 1
+texture = ExtResource("6_gbfbk")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Dynamic/Enemy4" unique_id=1765465366]
+position = Vector2(5, 41)
+shape = SubResource("RectangleShape2D_hwx5q")
+
+[node name="Perception" type="Area2D" parent="Dynamic/Enemy4" unique_id=420634691]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Dynamic/Enemy4/Perception" unique_id=1804925263]
+shape = SubResource("CircleShape2D_hwx5q")
+
+[node name="RayCast2D" type="RayCast2D" parent="Dynamic/Enemy4" unique_id=1834046953]
+
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="Dynamic/Enemy4" unique_id=1171695868]
+debug_enabled = true
+debug_path_custom_color = Color(1, 0.14509805, 1, 1)
+
+[node name="Enemy2" type="CharacterBody2D" parent="Dynamic" unique_id=152644937 node_paths=PackedStringArray("player")]
+position = Vector2(1571, -79)
+script = ExtResource("5_dwbse")
+player = NodePath("../Player")
+distance_to_track = 60.0
+
+[node name="Sprite2D" type="Sprite2D" parent="Dynamic/Enemy2" unique_id=1017399208]
+texture_filter = 1
+texture = ExtResource("6_gbfbk")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Dynamic/Enemy2" unique_id=1611634821]
+position = Vector2(5, 41)
+shape = SubResource("RectangleShape2D_hwx5q")
+
+[node name="Perception" type="Area2D" parent="Dynamic/Enemy2" unique_id=296473296]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Dynamic/Enemy2/Perception" unique_id=1685550149]
+shape = SubResource("CircleShape2D_hwx5q")
+
+[node name="RayCast2D" type="RayCast2D" parent="Dynamic/Enemy2" unique_id=1980887175]
+
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="Dynamic/Enemy2" unique_id=1390291666]
 
 [node name="Friend" type="CharacterBody2D" parent="Dynamic" unique_id=1496660758 node_paths=PackedStringArray("player")]
 position = Vector2(156, 77)
@@ -897,5 +978,43 @@ position = Vector2(1879, 580)
 
 [node name="Kitchen" type="Marker2D" parent="Dynamic/Static" unique_id=147194436]
 position = Vector2(1361, 575)
+
+[node name="NavigationRegion2D2" type="NavigationRegion2D" parent="Dynamic/Static" unique_id=1869983463]
+navigation_polygon = SubResource("NavigationPolygon_hwx5q")
+
+[node name="NavigationLink2D" type="NavigationLink2D" parent="Dynamic/Static" unique_id=2021244997]
+position = Vector2(1200, 338)
+start_position = Vector2(59, -4)
+end_position = Vector2(-69, 2)
+
+[node name="Coin" type="Sprite2D" parent="Dynamic" unique_id=1357395129]
+position = Vector2(1271, 272.00003)
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("11_ic0uy")
+
+[node name="Coin2" type="Sprite2D" parent="Dynamic" unique_id=1446672083]
+position = Vector2(1562, 487)
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("11_ic0uy")
+
+[node name="Coin3" type="Sprite2D" parent="Dynamic" unique_id=989582799]
+position = Vector2(1590, 496)
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("11_ic0uy")
+
+[node name="Coin4" type="Sprite2D" parent="Dynamic" unique_id=200758480]
+position = Vector2(1565, 512)
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("11_ic0uy")
+
+[node name="Coin5" type="Sprite2D" parent="Dynamic" unique_id=621312922]
+position = Vector2(1678, 273)
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("11_ic0uy")
+
+[node name="Coin6" type="Sprite2D" parent="Dynamic" unique_id=2084689280]
+position = Vector2(1659, 252)
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("11_ic0uy")
 
 [connection signal="timeout" from="Dynamic/HouseFriend/ChangeTarget" to="Dynamic/HouseFriend" method="_on_change_target_timeout"]
